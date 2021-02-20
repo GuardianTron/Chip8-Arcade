@@ -22,5 +22,5 @@ class User(db.Model,fsqla.FsUserMixin):
 class Role(db.Model,fsqla.FsRoleMixin):
     id = db.Column(db.Integer,primary_key=True)
     role = db.Column(db.String(80),unique=True)
-    description = db.Column(db.String)
+    description = db.Column(db.Text)
 
