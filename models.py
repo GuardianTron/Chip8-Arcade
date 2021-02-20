@@ -16,7 +16,7 @@ class User(db.Model,fsqla.FsUserMixin):
     password = db.Column(db.Text(),nullable=False)
     active = db.Column(db.Boolean)
     confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Roles',secondary='roles_users',
+    roles = db.relationship('Role',secondary='roles_users',
                             backref=db.backref('users',lazy='dynamic'))
 
 class Role(db.Model,fsqla.FsRoleMixin):
