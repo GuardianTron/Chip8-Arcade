@@ -1,6 +1,6 @@
 from flask import Flask
-from flask_security.utils import hash_password
-from sqlalchemy.sql.functions import user
+from flask_security.decorators import roles_accepted
+from flask_security.utils import hash_password,current_user
 from models import db,User,Role
 from flask_migrate import Migrate
 from flask_security import Security,SQLAlchemyUserDatastore
@@ -23,6 +23,11 @@ def create_test_user():
         user_datastore.add_role_to_user(user,role)
     db.session.commit()
 
+
+@app.route('/game/new')
+@roles_accepted('game_dev')
+def upload_new_game():
+    pass
 
 
 
