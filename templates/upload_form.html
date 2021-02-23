@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+     Upload Game
+{% endblock %}
+
+{% block main %}
+    <form method="POST" action="{{ url_for('upload_new_game') }}" enctype="multipart/form-data">
+        <input type="file" name="game_rom">
+        <button>Submit</button>
+    
+    </form>
+{% endblock %}

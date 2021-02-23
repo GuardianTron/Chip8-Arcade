@@ -1,9 +1,11 @@
-from flask import Flask
-from flask_security.decorators import roles_accepted
+from flask import Flask,render_template,request
+from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role
 from flask_migrate import Migrate
 from flask_security import Security,SQLAlchemyUserDatastore
+import os
+import uuid
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
@@ -23,11 +25,29 @@ def create_test_user():
         user_datastore.add_role_to_user(user,role)
     db.session.commit()
 
+@app.route("/")
+def index():
+    roles = ''
+    for role in current_user.roles:
+        roles += f'{role.role} '
+    return roles
 
-@app.route('/game/new')
-@roles_accepted('game_dev')
+@app.route('/game/new',methods=['GET','POST'])
+@roles_accepted('Game Developer')
 def upload_new_game():
-    pass
+    error_message = None
+    if request.method == 'POST' and 'game_rom' in request.files:
+        try:
+            #convert file to hex text format
+            rom_binary = request.files['game_rom'].stream.read()
+            rom_hex_file = rom_binary.hex()
+            with open(os.path.join(app.config['UPLOAD_FOLDER'],uuid.uuid4().hex),'w') as outfile:
+                outfile.write(rom_hex_file)
+        except IOError:
+            error_message = "Failed to save file."
+        else:
+            return rom_hex_file
+    return render_template('upload_form.html')
 
 
 
