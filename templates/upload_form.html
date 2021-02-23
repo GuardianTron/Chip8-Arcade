@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block main %}
+ {% if error_message %}
+    <h1>{{ error_message }}</h1>
+ {% endif %}
     <form method="POST" action="{{ url_for('upload_new_game') }}" enctype="multipart/form-data">
         <input type="file" name="game_rom">
         <button>Submit</button>

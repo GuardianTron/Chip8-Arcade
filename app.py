@@ -1,7 +1,8 @@
 from flask import Flask,render_template,request
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
-from models import db,User,Role
+from models import db,User,Role,Game
+from sqlalchemy.exc import SQLAlchemyError
 from flask_migrate import Migrate
 from flask_security import Security,SQLAlchemyUserDatastore
 import os
@@ -41,13 +42,22 @@ def upload_new_game():
             #convert file to hex text format
             rom_binary = request.files['game_rom'].stream.read()
             rom_hex_file = rom_binary.hex()
-            with open(os.path.join(app.config['UPLOAD_FOLDER'],uuid.uuid4().hex),'w') as outfile:
+            rom_filename = os.path.join(app.config['UPLOAD_FOLDER'],uuid.uuid4().hex)
+            with open(rom_filename,'w') as outfile:
                 outfile.write(rom_hex_file)
+            game_entry = Game(title='Test Title',description='Da game, duh',filename=rom_filename,user=current_user)
+            db.session.add(game_entry)
+            db.session.commit()
         except IOError:
             error_message = "Failed to save file."
+        except SQLAlchemyError:
+            error_message = 'Failed to store file in database.'
+            #remove saved file
+            if os.path.exists(rom_filename):
+                os.remove(rom_filename)
         else:
             return rom_hex_file
-    return render_template('upload_form.html')
+    return render_template('upload_form.html',error_message=error_message)
 
 
 
