@@ -49,8 +49,6 @@ def upload_new_game():
         except SQLAlchemyError:
             error_message = 'Failed to store file in database.'
             #remove saved file
-            if os.path.exists(game_entry.file):
-                os.remove(game_entry.file)
         else:
             return game_entry.filename
     return render_template('upload_form.html',error_message=error_message)
