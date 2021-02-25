@@ -1,6 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_security.models import fsqla_v2 as fsqla
 from sqlalchemy.orm import backref
+from sqlalchemy.ext.hybrid import hybrid_property
+import os
+import uuid
 
 db = SQLAlchemy()
 
@@ -32,3 +35,23 @@ class Game(db.Model):
     description = db.Column(db.Text)
     filename = db.Column(db.String(255),nullable=False)
     user = db.relationship('User',backref=db.backref('games',lazy='dynamic'))
+    
+    #return file path
+    @hybrid_property
+    def file(self):
+        print(type(db.get_app().config['UPLOAD_FOLDER']))
+        return os.path.join(db.get_app().config['UPLOAD_FOLDER'],str(self.filename))
+    
+    #save the file when set as hex stream
+    @file.setter
+    def file(self,file_stream):
+        binary = file_stream
+        hex = binary.hex()
+        self.filename = uuid.uuid4().hex
+        path = os.path.join(db.get_app().config['UPLOAD_FOLDER'],str(self.filename))
+        with open(path,'w') as writer:
+            writer.write(hex)
+
+
+
+        

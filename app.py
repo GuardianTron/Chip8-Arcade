@@ -41,11 +41,7 @@ def upload_new_game():
         try:
             #convert file to hex text format
             rom_binary = request.files['game_rom'].stream.read()
-            rom_hex_file = rom_binary.hex()
-            rom_filename = os.path.join(app.config['UPLOAD_FOLDER'],uuid.uuid4().hex)
-            with open(rom_filename,'w') as outfile:
-                outfile.write(rom_hex_file)
-            game_entry = Game(title='Test Title',description='Da game, duh',filename=rom_filename,user=current_user)
+            game_entry = Game(title='Test Title',description='Da game, duh',file=rom_binary,user=current_user)
             db.session.add(game_entry)
             db.session.commit()
         except IOError:
@@ -53,10 +49,10 @@ def upload_new_game():
         except SQLAlchemyError:
             error_message = 'Failed to store file in database.'
             #remove saved file
-            if os.path.exists(rom_filename):
-                os.remove(rom_filename)
+            if os.path.exists(game_entry.file):
+                os.remove(game_entry.file)
         else:
-            return rom_hex_file
+            return game_entry.filename
     return render_template('upload_form.html',error_message=error_message)
 
 
