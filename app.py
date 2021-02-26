@@ -43,7 +43,9 @@ def upload_new_game():
         try:
             #convert file to hex text format
             rom_binary = form.game_rom.data.stream.read()
-            game_entry = Game(title='Test Title',description='Da game, duh',file=rom_binary,user=current_user)
+            title = form.title.data
+            description = form.description.data
+            game_entry = Game(title=title,description=description,file=rom_binary,user=current_user)
             db.session.add(game_entry)
             db.session.commit()
         except IOError:
