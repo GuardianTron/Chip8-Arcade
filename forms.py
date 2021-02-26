@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileRequired
 from wtforms import StringField,TextAreaField
-from wtforms.validators import ValidationError
+from wtforms.validators import InputRequired, ValidationError,Length
 from werkzeug.datastructures import FileStorage
 
 class FileSize:
@@ -45,3 +45,5 @@ class FileSize:
 
 class GameUploadForm(FlaskForm):
     game_rom = FileField('game_rom',validators=[FileRequired(),FileSize(4*2**10)])
+    title = StringField('Title',validators=[InputRequired(),Length(min=1,max=255)])
+    description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])

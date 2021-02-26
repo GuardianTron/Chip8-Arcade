@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_renderfield.html' import renderfield %}
 {% block title %}
      Upload Game
 {% endblock %}
@@ -9,14 +10,11 @@
  {% endif %}
     <form method="POST" action="{{ url_for('upload_new_game') }}" enctype="multipart/form-data">
         {{ form.csrf_token }}
-        {% if form.errors %}
-        <li>
-            {% for error in form.game_rom.errors %}
-                {{ error }}
-            {% endfor %}
-        {% endif %}
-        </li>
-        {{ form.game_rom() }}
+        <ul>
+            <li>{{ renderfield(form.title) }}</li>
+            <li>{{ renderfield(form.description) }}</li>
+            <li>{{ renderfield(form.game_rom) }}</li>
+        </ul>
         <button>Submit</button>
     </form>
 {% endblock %}
