@@ -8,8 +8,15 @@
     <h1>{{ error_message }}</h1>
  {% endif %}
     <form method="POST" action="{{ url_for('upload_new_game') }}" enctype="multipart/form-data">
-        <input type="file" name="game_rom">
+        {{ form.csrf_token }}
+        {% if form.errors %}
+        <li>
+            {% for error in form.game_rom.errors %}
+                {{ error }}
+            {% endfor %}
+        {% endif %}
+        </li>
+        {{ form.game_rom() }}
         <button>Submit</button>
-    
     </form>
 {% endblock %}
