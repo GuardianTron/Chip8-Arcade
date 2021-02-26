@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from operator import attrgetter
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy,event
 from flask_security.models import fsqla_v2 as fsqla
 from sqlalchemy.orm import backref
@@ -19,7 +20,16 @@ class FileSaveMixin:
     
     @property
     def path(self):
-        return os.path.join(db.get_app().config['UPLOAD_FOLDER'],str(self.filename))
+        if not hasattr(self,'_path'):
+            #attempt to get per class configuration
+            classname = self.__class__.__name__.lower()
+            basedir = os.path.join(current_app.config['UPLOAD_FOLDER'],classname)
+            #attempt to create directory if it does not exit
+            if not os.path.isdir(basedir):
+                os.mkdir(basedir)
+            self._path = os.path.join(basedir,str(self.filename))
+        print(self.__class__.__name__)
+        return self._path
 
     @abstractmethod
     def save(self):
