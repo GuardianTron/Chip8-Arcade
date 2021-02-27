@@ -39,11 +39,14 @@ class FileSize:
 
             
 
-    
+def strip_whitespace(text):
+    if text is not None:
+        return text.strip()
+    return text
 
          
 
 class GameUploadForm(FlaskForm):
     game_rom = FileField('game_rom',validators=[FileRequired(),FileSize(4*2**10)])
-    title = StringField('Title',validators=[InputRequired(),Length(min=1,max=255)])
+    title = StringField('Title',validators=[InputRequired(),Length(min=1,max=255)],filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
