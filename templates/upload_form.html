@@ -4,11 +4,19 @@
      Upload Game
 {% endblock %}
 
+{% macro render_action() %}
+    {% if id is defined %}
+        {{ url_for('update_game',id=id) }}
+    {% else %}
+        {{ url_for('upload_new_game') }}
+    {% endif %}
+{% endmacro %}
+
 {% block main %}
- {% if error_message %}
+{% if error_message %}
     <h1>{{ error_message }}</h1>
- {% endif %}
-    <form method="POST" action="{{ url_for('upload_new_game') }}" enctype="multipart/form-data">
+{% endif %}
+    <form method="POST" action="{{ render_action() }}" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <ul>
             <li>{{ renderfield(form.title) }}</li>
