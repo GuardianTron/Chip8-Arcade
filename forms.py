@@ -47,8 +47,10 @@ def strip_whitespace(text):
          
 
 class GameUploadForm(FlaskForm):
-    game_rom = FileField('game_rom',validators=[FileRequired(),FileSize(4*2**10)])
+    game_rom = FileField('game_rom',validators=[FileSize(4*2**10)])
     title = StringField('Title',
                         validators=[InputRequired(),Length(min=1,max=255),Regexp("^[0-9a-zA-z \.\?\!\,\']+$",message='Only letters, numbers, spaces and the following punctuation are allowed: !?.\',')],
                         filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
+
+

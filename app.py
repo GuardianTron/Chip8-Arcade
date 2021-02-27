@@ -3,6 +3,7 @@ from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game
 from forms import GameUploadForm
+from flask_wtf.file import FileRequired
 from sqlalchemy.exc import SQLAlchemyError
 from flask_migrate import Migrate
 from flask_security import Security,SQLAlchemyUserDatastore
@@ -39,7 +40,7 @@ def index():
 def upload_new_game():
     error_message = None
     form = GameUploadForm()
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and form.validate(extra_validators={'game_rom':[FileRequired()]}):
         try:
             #convert file to hex text format
             rom_binary = form.game_rom.data.stream.read()
