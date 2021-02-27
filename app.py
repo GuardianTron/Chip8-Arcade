@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request, redirect, flash,url_for
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game
@@ -58,6 +58,41 @@ def upload_new_game():
             return game_entry.filename
         
     return render_template('upload_form.html',form=form,error_message=error_message)
+
+#TODO add in code to handle admins as well
+@app.route('/game/update/<int:id>',methods=['GET','POST'])
+@roles_accepted('Game Developer')
+def update_game(id):
+    game = Game.query.get(id)
+    #redirect user if not owner
+    if game.user.id != current_user.id:
+        flash('You do not have permission to edit this game.')
+        return redirect(url_for("/"))
+    error_message = None
+    form = GameUploadForm()
+    if request.method == 'POST':
+        if form.validate():
+            try:
+                #convert file to hex text format
+                rom_binary = None
+                if form.game_rom.data:
+                    rom_binary = form.game_rom.data.stream.read()
+                game.title = form.title.data
+                game.description = form.description.data
+                game.file = rom_binary
+                db.session.commit()
+            except IOError:
+                error_message = "Failed to save file."
+            except SQLAlchemyError:
+                error_message = 'Failed to store file in database.'
+                #remove saved file
+            else:
+                return game.filename
+    #populate form with data from database            
+    else:
+        form.title.data = game.title
+        form.description.data = game.description
+    return render_template('upload_form.html',form=form,error_message=error_message,id=game.id)
 
 
 
