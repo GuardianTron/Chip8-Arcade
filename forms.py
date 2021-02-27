@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileRequired
 from wtforms import StringField,TextAreaField
-from wtforms.validators import InputRequired, ValidationError,Length
+from wtforms.validators import InputRequired, Regexp, ValidationError,Length
 from werkzeug.datastructures import FileStorage
 
 class FileSize:
@@ -48,5 +48,7 @@ def strip_whitespace(text):
 
 class GameUploadForm(FlaskForm):
     game_rom = FileField('game_rom',validators=[FileRequired(),FileSize(4*2**10)])
-    title = StringField('Title',validators=[InputRequired(),Length(min=1,max=255)],filters=[strip_whitespace])
+    title = StringField('Title',
+                        validators=[InputRequired(),Length(min=1,max=255),Regexp("^[0-9a-zA-z \.\?\!\,\']+$",message='Only letters, numbers, spaces and the following punctuation are allowed: !?.\',')],
+                        filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
