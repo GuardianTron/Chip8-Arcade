@@ -34,14 +34,25 @@ class FileSaveMixin:
     @abstractmethod
     def save(self):
         pass
-
-@event.listens_for(FileSaveMixin,'before_insert',propagate=True)
+'''
+Generates a unique filename whenever a new file is uploaded.
+'''
 def generate_filename(mapper,connection,target):
-    target.filename = uuid.uuid4().hex
-           
-@event.listens_for(FileSaveMixin,'after_insert',propagate=True)
+    if target.file is not None:
+        target.filename = uuid.uuid4().hex
+
+event.listen(FileSaveMixin,'before_insert',generate_filename,propagate=True)
+event.listen(FileSaveMixin,'before_update',generate_filename,propagate=True)
+
+'''
+Save new file if one has been uploaded.
+'''        
 def save_file(mapper,connection,target):
-    target.save()
+    if target.file is not None:    
+        target.save()
+        
+event.listen(FileSaveMixin,'after_insert',save_file,propagate=True)
+event.listen(FileSaveMixin,'after_update',save_file,propagate=True)
 
 
 
