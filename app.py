@@ -98,7 +98,6 @@ def update_game(id):
 @app.route('/game/<int:id>')
 def game_profile(id):
     game = Game.query.get(id)
-    print(game)
     if not game:
         #TODO Switch to redirect to listing page
         flash('The game you are searching for was not found.')
