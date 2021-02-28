@@ -98,9 +98,13 @@ def update_game(id):
 @app.route('/game/<int:id>')
 def game_profile(id):
     game = Game.query.get(id)
+    print(game)
     if not game:
-        return render_template('profile.html'),404
+        #TODO Switch to redirect to listing page
+        flash('The game you are searching for was not found.')
+        return render_template('profile.html',game=game),404
     return render_template('profile.html',game=game)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
