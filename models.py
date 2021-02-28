@@ -71,7 +71,10 @@ def save_file(mapper,connection,target):
 event.listen(FileSaveMixin,'after_insert',save_file,propagate=True)
 event.listen(FileSaveMixin,'after_update',save_file,propagate=True)
 
-
+@event.listens_for(FileSaveMixin,'after_delete',propagate=True)
+def delete_file(mapper,connection,target):
+    if target.path and os.path.exists(target.path):
+        os.remove(target.path)
 
 class User(db.Model,fsqla.FsUserMixin):
 
