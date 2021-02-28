@@ -95,7 +95,12 @@ def update_game(id):
         form.description.data = game.description
     return render_template('upload_form.html',form=form,error_message=error_message,id=game.id)
 
-
+@app.route('/game/<int:id>')
+def game_profile(id):
+    game = Game.query.get(id)
+    if not game:
+        return render_template('profile.html'),404
+    return render_template('profile.html',game=game)
 
 if __name__ == "__main__":
     app.run(debug=True)
