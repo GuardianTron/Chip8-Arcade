@@ -4,6 +4,7 @@ from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game
 from forms import GameUploadForm
 from flask_wtf.file import FileRequired
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy.exc import SQLAlchemyError
 from flask_migrate import Migrate
 from flask_security import Security,SQLAlchemyUserDatastore
@@ -12,6 +13,7 @@ import uuid
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
+csrf = CSRFProtect(app)
 
 db.init_app(app)
 migrate = Migrate(app,db)
