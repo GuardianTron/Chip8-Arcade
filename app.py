@@ -35,7 +35,6 @@ def index():
 @app.route('/game/new',methods=['GET','POST'])
 @roles_accepted('Game Developer')
 def upload_new_game():
-    error_message = None
     form = GameUploadForm()
     if request.method == 'POST' and form.validate(extra_validators={'game_rom':[FileRequired()]}):
         try:
@@ -47,14 +46,15 @@ def upload_new_game():
             db.session.add(game_entry)
             db.session.commit()
         except IOError:
-            error_message = "Failed to save file."
+            flash("Failed to save file.")
         except SQLAlchemyError:
-            error_message = 'Failed to store file in database.'
+            flash('Failed to store file in database.')
             #remove saved file
         else:
-            return game_entry.filename
+            flash('Your game has been successfully uploaded.')
+            return redirect(url_for('game_profile',id=game_entry.id))
         
-    return render_template('upload_form.html',form=form,error_message=error_message)
+    return render_template('upload_form.html',form=form)
 
 #TODO add in code to handle admins as well
 @app.route('/game/update/<int:id>',methods=['GET','POST'])
@@ -83,17 +83,18 @@ def update_game(id):
                 game.file = rom_binary
                 db.session.commit()
             except IOError:
-                error_message = "Failed to save file."
+                flash("Failed to save file.")
             except SQLAlchemyError:
-                error_message = 'Failed to store file in database.'
+                flash('Failed to store file in database.')
                 #remove saved file
             else:
-                return game.filename
+                flash("Your game has been successfully updated.")
+                return redirect(url_for('game_profile',id=game.id))
     #populate form with data from database            
     else:
         form.title.data = game.title
         form.description.data = game.description
-    return render_template('upload_form.html',form=form,error_message=error_message,id=game.id)
+    return render_template('upload_form.html',form=form,id=game.id)
 
 @app.route('/game/<int:id>')
 def game_profile(id):

@@ -13,9 +13,6 @@
 {% endmacro %}
 
 {% block main %}
-{% if error_message %}
-    <h1>{{ error_message }}</h1>
-{% endif %}
     <form method="POST" action="{{ render_action() }}" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <ul>
