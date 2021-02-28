@@ -110,5 +110,16 @@ def list_games_developer():
     games = current_user.games
     return render_template('game_list_dev.html',games=games)
 
+@app.route('/game/delete',methods=["POST"])
+@roles_accepted('Game Developer')
+def delete_games():
+    ids = request.form.getlist('game_ids')
+    games = Game.query.filter(Game.id.in_(ids),User.id==current_user.id).all()
+    for game in games:
+        db.session.delete(game)
+    db.session.commit()
+    flash('Your games have been deleted.')
+    return redirect(url_for('list_games_developer'))
+
 if __name__ == "__main__":
     app.run(debug=True)
