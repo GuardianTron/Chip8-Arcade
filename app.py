@@ -30,10 +30,7 @@ def create_test_user():
 
 @app.route("/")
 def index():
-    roles = ''
-    for role in current_user.roles:
-        roles += f'{role.role} '
-    return roles
+    return render_template('base.html')
 
 @app.route('/game/new',methods=['GET','POST'])
 @roles_accepted('Game Developer')
@@ -64,6 +61,10 @@ def upload_new_game():
 @roles_accepted('Game Developer')
 def update_game(id):
     game = Game.query.get(id)
+    #handle case game not found
+    if game is None:
+        flash('The game you are trying to edit could not be found.')
+        return redirect(url_for('index'))
     #redirect user if not owner
     if game.user.id != current_user.id:
         flash('You do not have permission to edit this game.')
