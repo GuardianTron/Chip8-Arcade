@@ -17,40 +17,57 @@ roles_users = db.Table('roles_users',
 
 class FileSaveMixin:
     file = None
+    #used for deleting old files when a new file is uploaded
+    old_path = None
     
     @property
     def path(self):
+        #make sure directory exists and make one if it doesn't
+        #attempt to get per class configuration
+        classname = self.__class__.__name__.lower()
+        basedir = os.path.join(current_app.config['UPLOAD_FOLDER'],classname)
         if not hasattr(self,'_path'):
-            #attempt to get per class configuration
-            classname = self.__class__.__name__.lower()
-            basedir = os.path.join(current_app.config['UPLOAD_FOLDER'],classname)
+
             #attempt to create directory if it does not exit
             if not os.path.isdir(basedir):
                 os.mkdir(basedir)
-            self._path = os.path.join(basedir,str(self.filename))
-        print(self.__class__.__name__)
+        #make sure that setting filename changes path
+        self._path = os.path.join(basedir,str(self.filename))
         return self._path
 
     @abstractmethod
     def save(self):
         pass
+
+
 '''
 Generates a unique filename whenever a new file is uploaded.
+If update, saves old path for later deletion
 '''
 def generate_filename(mapper,connection,target):
     if target.file is not None:
+        #save path for later deletion
+        if target.filename is not None:
+            target.old_path = target.path
         target.filename = uuid.uuid4().hex
 
 event.listen(FileSaveMixin,'before_insert',generate_filename,propagate=True)
 event.listen(FileSaveMixin,'before_update',generate_filename,propagate=True)
 
+
+
 '''
 Save new file if one has been uploaded.
+Delete old file during update if one exists
 '''        
 def save_file(mapper,connection,target):
     if target.file is not None:    
         target.save()
-        
+        if target.old_path is not None and os.path.exists(target.old_path):
+           os.remove(target.old_path)
+           target.old_path=None
+
+
 event.listen(FileSaveMixin,'after_insert',save_file,propagate=True)
 event.listen(FileSaveMixin,'after_update',save_file,propagate=True)
 
