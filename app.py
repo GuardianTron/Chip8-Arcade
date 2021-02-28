@@ -104,6 +104,11 @@ def game_profile(id):
         return render_template('profile.html',game=game),404
     return render_template('profile.html',game=game)
 
+@app.route('/game/mygames')
+@roles_accepted('Game Developer')
+def list_games_developer():
+    games = current_user.games
+    return render_template('game_list_dev.html',games=games)
 
 if __name__ == "__main__":
     app.run(debug=True)
