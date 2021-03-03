@@ -20,6 +20,14 @@
             <li>{{ renderfield(form.description) }}</li>
             <li>{{ renderfield(form.game_rom) }}</li>
         </ul>
+        <fieldset>
+            <legend>Configure Key Codes</legend>
+            <ul>
+                {% for field in form.key_codes %}
+                    {{ field.label }}{{field}}
+                {% endfor %}
+            </ul>
+        </fieldset>
         <button>Submit</button>
     </form>
 {% endblock %}

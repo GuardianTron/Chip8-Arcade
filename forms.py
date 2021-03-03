@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileRequired
-from wtforms import StringField,TextAreaField
-from wtforms.validators import InputRequired, Regexp, ValidationError,Length
+from wtforms import StringField,TextAreaField,IntegerField,FieldList,FormField
+from wtforms.fields.core import Field
+from wtforms.validators import InputRequired, NumberRange, Regexp, ValidationError,Length,Optional
 from werkzeug.datastructures import FileStorage
+import re
 
 class FileSize:
     def __init__(self,max_size,message=None):
@@ -44,7 +46,9 @@ def strip_whitespace(text):
         return text.strip()
     return text
 
-         
+class KeyConfigForm(FlaskForm):
+    hex_value = StringField('Hex Value',validators=[Optional(),Regexp("^(0x)?[0-9a-f]$",re.IGNORECASE,message="Must be a hexidecimal value between 0 and F")])
+    key_code = IntegerField('Key Code',validators=[Optional(),NumberRange(0,255,message="Please enter a valid keycode.")])       
 
 class GameUploadForm(FlaskForm):
     game_rom = FileField('game_rom',validators=[FileSize(4*2**10)])
@@ -52,5 +56,5 @@ class GameUploadForm(FlaskForm):
                         validators=[InputRequired(),Length(min=1,max=255),Regexp("^[0-9a-zA-z \.\?\!\,\']+$",message='Only letters, numbers, spaces and the following punctuation are allowed: !?.\',')],
                         filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
-
+    key_codes = FieldList(FormField(KeyConfigForm),min_entries=16,max_entries=16)
 
