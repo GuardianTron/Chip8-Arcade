@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request, redirect, flash,url_for
+from flask import Flask,render_template,request, redirect, flash,url_for,json
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game
@@ -83,6 +83,10 @@ def update_game(id):
                 game.title = form.title.data
                 game.description = form.description.data
                 game.file = rom_binary
+                
+                
+                print(json.dumps(form.key_configuration))
+
                 db.session.commit()
             except IOError:
                 flash("Failed to save file.")

@@ -12,6 +12,16 @@
     {% endif %}
 {% endmacro %}
 
+{% macro render_errors(field) %}
+    <ul>
+    {% if field.errors %} 
+        {% for error in field.errors %}
+            <li>{{ field.errors }}</li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+{% endmacro %}
+
 {% block main %}
     <form method="POST" action="{{ render_action() }}" enctype="multipart/form-data">
         {{ form.csrf_token }}
@@ -20,11 +30,21 @@
             <li>{{ renderfield(form.description) }}</li>
             <li>{{ renderfield(form.game_rom) }}</li>
         </ul>
+        {{ render_errors(form.key_codes) }}
         <fieldset>
             <legend>Configure Key Codes</legend>
+           
             <ul>
                 {% for field in form.key_codes %}
-                    {{ field.label }}{{field}}
+                    <li>
+                        {{ field.hex_value.label }} {{ field.hex_value }} 
+                        {{ field.key_code.label }} {{ field.key_code }}
+                        
+                       {{ render_errors(field.hex_value) }}
+                       {{ render_errors(field.key_code) }}
+
+
+                    </li>
                 {% endfor %}
             </ul>
         </fieldset>
