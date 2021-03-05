@@ -101,3 +101,14 @@ class GameUploadForm(FlaskForm):
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
     key_codes = FieldList(FormField(KeyConfigForm),validators=[ConfigKeysUnique()],min_entries=16,max_entries=16)
 
+    
+    '''
+    :returns Dictionary of chip 8 key values indexed by keycode.
+    '''
+    @property
+    def key_configuration(self):
+        config = {}
+        for entry in self.key_codes.entries:
+            if entry.hex_value.data and entry.key_code.data:
+                config[entry.key_code.data] = entry.hex_value.data
+        return config 
