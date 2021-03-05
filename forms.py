@@ -65,7 +65,7 @@ class ConfigKeysUnique:
     '''
     def __call__(self,form,field):
         key_codes = {}
-        for entry in self.entries:
+        for entry in field.entries:
             if not hasattr(entry,self.chip_key_field):
                 raise ValueError(f"{self.chip_key_field} is not a valid form attribute.")
             elif not hasattr(entry,self.key_code_field):
