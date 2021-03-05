@@ -16,7 +16,7 @@
     <ul>
     {% if field.errors %} 
         {% for error in field.errors %}
-            <li>{{ field.errors }}</li>
+            <li>{{ error }}</li>
         {% endfor %}
     {% endif %}
     </ul>
@@ -35,7 +35,7 @@
             <legend>Configure Key Codes</legend>
            
             <ul>
-                {% for field in form.key_codes %}
+                {% for field in form.key_codes.entries %}
                     <li>
                         {{ field.hex_value.label }} {{ field.hex_value }} 
                         {{ field.key_code.label }} {{ field.key_code }}

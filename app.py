@@ -85,8 +85,6 @@ def update_game(id):
                 game.file = rom_binary
                 
                 
-                print(json.dumps(form.key_configuration))
-
                 db.session.commit()
             except IOError:
                 flash("Failed to save file.")
@@ -96,7 +94,8 @@ def update_game(id):
             else:
                 flash("Your game has been successfully updated.")
                 return redirect(url_for('game_profile',id=game.id))
-    #populate form with data from database            
+    #populate form with data from database  
+        print(form.key_codes.errors)          
     else:
         form.title.data = game.title
         form.description.data = game.description
