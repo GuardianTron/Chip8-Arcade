@@ -94,8 +94,7 @@ def update_game(id):
             else:
                 flash("Your game has been successfully updated.")
                 return redirect(url_for('game_profile',id=game.id))
-    #populate form with data from database  
-        print(form.key_codes.errors)          
+    #populate form with data from database       
     else:
         form.title.data = game.title
         form.description.data = game.description

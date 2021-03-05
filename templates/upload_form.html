@@ -16,7 +16,9 @@
     <ul>
     {% if field.errors %} 
         {% for error in field.errors %}
-            <li>{{ error }}</li>
+            {% if error is not mapping %}
+                <li>{{ error }}</li>
+            {% endif %}
         {% endfor %}
     {% endif %}
     </ul>
