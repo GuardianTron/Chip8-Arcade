@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request, redirect, flash,url_for,json
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
-from models import db,User,Role,Game
+from models import db,User,Role,Game,ControlConfig
 from forms import GameUploadForm
 from flask_wtf.file import FileRequired
 from flask_wtf.csrf import CSRFProtect
@@ -83,7 +83,14 @@ def update_game(id):
                 game.title = form.title.data
                 game.description = form.description.data
                 game.file = rom_binary
-                
+
+                #update control configuration
+                #add new configuration if prior config not specified
+                config = game.control_config.first()
+                if config :
+                    config.key_mappying = form.key_configuration
+                else:
+                    game.control_config.append(ControlConfig(key_mapping=form.key_configuration))
                 
                 db.session.commit()
             except IOError:

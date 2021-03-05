@@ -105,6 +105,14 @@ class Game(db.Model,FileSaveMixin):
         with open(self.path,'w') as writer:
             writer.write(hex)
 
+
+class ControlConfig(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    game_id = db.Column(db.Integer,db.ForeignKey('game.id'))
+    key_mapping = db.Column(db.PickleType())
+    game = db.relationship('Game',uselist=False,backref=db.backref('control_config',lazy='dynamic'))
+
+
     
 
 
