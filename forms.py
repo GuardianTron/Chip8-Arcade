@@ -41,14 +41,28 @@ class FileSize:
                 if size > self.max_size:
                     raise ValidationError(self.message)
 
-
+'''
+Validates a list of key codes mapped to chip 8 key code to verify that 
+submitted key codes are each only mapped to one chip 8 key code.
+'''
 class ConfigKeysUnique:
+    '''
+    Takes the names of the sub form fields for the key code and chip 8 key code.
+    
+    :param <string> chip_key_field -- The attribute name of the chip key field on the enclosing form object.
+    :param <string> key_code_field -- The attribute name of the key code field on the enclosing form object.
+    '''
+
     def __init__(self,chip_key_field='hex_value',key_code_field='key_code',message=None):
         if not message:
             self.message = "Contains keycodes mapped to multiple Chip 8 keys."
             self.chip_key_field = chip_key_field
             self.key_code_field = key_code_field
 
+    '''
+    Validation method
+    :raises ValidationError
+    '''
     def __call__(self,form,field):
         key_codes = {}
         for entry in self.entries:
@@ -85,5 +99,5 @@ class GameUploadForm(FlaskForm):
                         validators=[InputRequired(),Length(min=1,max=255),Regexp("^[0-9a-zA-z \.\?\!\,\']+$",message='Only letters, numbers, spaces and the following punctuation are allowed: !?.\',')],
                         filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
-    key_codes = FieldList(FormField(KeyConfigForm),min_entries=16,max_entries=16)
+    key_codes = FieldList(FormField(KeyConfigForm),validators=[ConfigKeysUnique()],min_entries=16,max_entries=16)
 
