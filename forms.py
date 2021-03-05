@@ -6,6 +6,9 @@ from wtforms.validators import InputRequired, NumberRange, Regexp, ValidationErr
 from werkzeug.datastructures import FileStorage
 import re
 
+'''
+Validates the size of the file.
+'''
 class FileSize:
     def __init__(self,max_size,message=None):
          
@@ -37,6 +40,32 @@ class FileSize:
                 field.data.stream.seek(start_pos)
                 if size > self.max_size:
                     raise ValidationError(self.message)
+
+
+class ConfigKeysUnique:
+    def __init__(self,chip_key_field='hex_value',key_code_field='key_code',message=None):
+        if not message:
+            self.message = "Contains keycodes mapped to multiple Chip 8 keys."
+            self.chip_key_field = chip_key_field
+            self.key_code_field = key_code_field
+
+    def __call__(self,form,field):
+        key_codes = {}
+        for entry in self.entries:
+            if not hasattr(entry,self.chip_key_field):
+                raise ValueError(f"{self.chip_key_field} is not a valid form attribute.")
+            elif not hasattr(entry,self.key_code_field):
+                raise ValueError(f"{self.key_code_field} is not a valid form attribute.")
+            else:
+                #make sure empty fields are not passed
+                chip_key = str(getattr(entry,self.chip_key_field).data).strip()
+                key_code = str(getattr(entry,self.key_code_field).data).strip()
+
+                if chip_key and key_code:
+                    if key_code in key_codes:
+                        raise ValidationError(self.message)
+                    else:
+                        key_codes[key_code] = chip_key
 
 
             
