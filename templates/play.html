@@ -6,20 +6,7 @@
 {% endblock %}
 
 {% block scripts_body %}
-<script type="module">
-    import {Chip8Emulator} from "{{ url_for('static',filename='javascript/emulator/chip8emulator.js') }}";
-    import {loadGame} from "{{ url_for('static',filename='javascript/emulator/loaders.js') }}";
-
-    const canvas = document.getElementById('emulator_screen');
-    let emulator = new Chip8Emulator(canvas);
-    fetch("{{ url_for('game_json',id=game.id) }}").then(
-        async function(response){
-            const config = await response.json();
-            const keys = config['key_config'];
-            emulator.loadKeyMap(keys);
-            loadGame(emulator,config['chip8_font'],config['super_chip_font'],config['rom']);
-            
-        });
+<script type="module" src="{{ url_for('static',filename='javascript/emulator_player.js') }}" data-gameurl="{{ url_for('game_json',id=game.id) }}">  
 
 </script>
 {% endblock %}
