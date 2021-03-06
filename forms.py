@@ -113,6 +113,10 @@ class GameUploadForm(FlaskForm):
                 config[entry.key_code.data] = entry.hex_value.data
         return config 
 
+    '''
+    Sets saved keycode data into form fields
+    :param config Key code dict formatted as {key_code:hex_value} 
+    '''
     @key_configuration.setter
     def key_configuration(self,config):
         
