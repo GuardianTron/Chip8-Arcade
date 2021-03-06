@@ -45,6 +45,7 @@ def upload_new_game():
             title = form.title.data
             description = form.description.data
             game_entry = Game(title=title,description=description,file=rom_binary,user=current_user)
+            game_entry.control_config.append(ControlConfig(key_mapping=form.key_configuration))
             db.session.add(game_entry)
             db.session.commit()
         except IOError:
@@ -89,7 +90,7 @@ def update_game(id):
                 #add new configuration if prior config not specified
                 config = game.control_config.first()
                 if config :
-                    config.key_mappying = form.key_configuration
+                    config.key_mapping = form.key_configuration
                 else:
                     game.control_config.append(ControlConfig(key_mapping=form.key_configuration))
                 
@@ -104,11 +105,12 @@ def update_game(id):
                 return redirect(url_for('game_profile',id=game.id))
     #populate form with data from database       
     else:
-        form.title.data = game.title
-        form.description.data = game.description
+        #form.title.data = game.title
+        #form.description.data = game.description
         config = game.control_config.first()
         if config:
             form.key_configuration = config.key_mapping
+
     return render_template('upload_form.html',form=form,id=game.id)
 
 @app.route('/game/<int:id>')

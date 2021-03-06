@@ -117,5 +117,7 @@ class GameUploadForm(FlaskForm):
     def key_configuration(self,config):
         
         for key_code in config:
-            key_code_form = FormField(KeyConfigForm(obj={'key_code':key_code,'hex_value':config[key_code]}))
+            obj = {'key_code':key_code,'hex_value':str(config[key_code])}
+            key_code_form = FormField(KeyConfigForm)
             self.key_codes.append_entry(key_code_form)
+            self.key_codes.entries[-1].form.process(data=obj)
