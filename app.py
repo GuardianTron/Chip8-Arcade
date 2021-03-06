@@ -72,7 +72,8 @@ def update_game(id):
         flash('You do not have permission to edit this game.')
         return redirect(url_for("/"))
     error_message = None
-    form = GameUploadForm()
+    form = GameUploadForm(obj=game)
+
     if request.method == 'POST':
         if form.validate():
             try:
@@ -105,6 +106,9 @@ def update_game(id):
     else:
         form.title.data = game.title
         form.description.data = game.description
+        config = game.control_config.first()
+        if config:
+            form.key_configuration = config.key_mapping
     return render_template('upload_form.html',form=form,id=game.id)
 
 @app.route('/game/<int:id>')
