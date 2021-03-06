@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}{% endblock %}</title>
+    {% block scripts_head %}{% endblock %}
 
 </head>
 <body>
@@ -35,5 +36,7 @@
     {% block main %}
 
     {% endblock %}
+
+    {% block scripts_body %}{% endblock %}
 </body>
 </html>

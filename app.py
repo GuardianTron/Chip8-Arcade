@@ -34,6 +34,15 @@ def create_test_user():
 def index():
     return render_template('base.html')
 
+#TODO Create a proper 404 page
+@app.route("/game/play/<int:id>")
+def play_game(id):
+    game = Game.query.get(id)
+    if game is None:
+        flash('The game you are looking for could not be found.')
+        return "The game you are searching for could not be found",404
+    return render_template("play.html",game=game)
+
 @app.route('/game/new',methods=['GET','POST'])
 @roles_accepted('Game Developer')
 def upload_new_game():

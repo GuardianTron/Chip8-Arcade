@@ -1,0 +1,17 @@
+{% extends "base.html" %} 
+{% block title %}{{ game.title }}{% endblock %}
+
+{% block main %}
+<canvas id="emulator_screen" width="640" height="320"></canvas>
+{% endblock %}
+
+{% block scripts_body %}
+<script type="module">
+    import {Chip8Emulator} from "{{ url_for('static',filename='javascript/emulator/chip8emulator.js') }}";
+    import {loadGame} from "{{ url_for('static',filename='javascript/emulator/loaders.js') }}";
+
+    const canvas = document.getElementById('emulator_screen');
+    let emulator = new Chip8Emulator(canvas);
+
+</script>
+{% endblock %}
