@@ -131,8 +131,12 @@ def game_json(id):
     if control_config is None:
         return json.jsonify({"error":"Could not find control configuration for the game."})
     game_info = {}
-    game_info['file'] = url_for('send_rom',id=id)
-    game_info['key_config'] = control_config.key_mapping
+    game_info['rom'] = url_for('send_rom',id=id)
+    game_info['chip8_font'] = url_for('static',filename="javascript/emulator/fonts/chip8.cft")
+    game_info['super_chip_font'] = url_for('static',filename="javascript/emulator/fonts/chip8super.sft")
+    #reverse keymapping to fit with emulator standard of hex_value:key
+    keys_remapped = {control_config.key_mapping[key_code]:key_code for key_code in control_config.key_mapping}
+    game_info['key_config'] = keys_remapped
     return json.jsonify(game_info)
     
 @app.route('/game/rom/<int:id>')
@@ -141,7 +145,7 @@ def send_rom(id):
     if game is None:
         abort(404)
     return send_file(game.path)
-    
+
 @app.route('/game/<int:id>')
 def game_profile(id):
     game = Game.query.get(id)
