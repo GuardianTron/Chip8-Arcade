@@ -121,3 +121,4 @@ class GameUploadForm(FlaskForm):
             key_code_form = FormField(KeyConfigForm)
             self.key_codes.append_entry(key_code_form)
             self.key_codes.entries[-1].form.process(data=obj)
+        self.key_codes.entries.reverse()
