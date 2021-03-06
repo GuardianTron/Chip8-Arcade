@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request, redirect, flash,url_for,json
+from flask import Flask,render_template,request, redirect, flash,url_for,json,abort,send_file
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game,ControlConfig
@@ -122,6 +122,26 @@ def update_game(id):
 
     return render_template('upload_form.html',form=form,id=game.id)
 
+@app.route('/game/config/<int:id>')
+def game_json(id):
+    game = Game.query.get(id)
+    if game is None:
+        return json.jsonify({"error":"The game could not be found."})
+    control_config = game.control_config.first()
+    if control_config is None:
+        return json.jsonify({"error":"Could not find control configuration for the game."})
+    game_info = {}
+    game_info['file'] = url_for('send_rom',id=id)
+    game_info['key_config'] = control_config.key_mapping
+    return json.jsonify(game_info)
+    
+@app.route('/game/rom/<int:id>')
+def send_rom(id):
+    game = Game.query.get(id)
+    if game is None:
+        abort(404)
+    return send_file(game.path)
+    
 @app.route('/game/<int:id>')
 def game_profile(id):
     game = Game.query.get(id)
