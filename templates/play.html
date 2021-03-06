@@ -12,6 +12,14 @@
 
     const canvas = document.getElementById('emulator_screen');
     let emulator = new Chip8Emulator(canvas);
+    fetch("{{ url_for('game_json',id=game.id) }}").then(
+        async function(response){
+            const config = await response.json();
+            const keys = config['key_config'];
+            emulator.loadKeyMap(keys);
+            loadGame(emulator,config['chip8_font'],config['super_chip_font'],config['rom']);
+            
+        });
 
 </script>
 {% endblock %}

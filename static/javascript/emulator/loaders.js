@@ -11,6 +11,16 @@ async function downloadBinaryFile(fileURL){
         throw new Error(`Unable to load file ${fileURL}.`);
     }
 }
+/**
+ * Takes the emulator instance and appropriate urls to 
+ * load fonts and the game rom.
+ * Starts game once all assets are loaded.
+ *  
+ * @param {Chip8Emulator} emulator 
+ * @param {String} chip8FontURL 
+ * @param {String} superChipFontURL 
+ * @param {String} romURL 
+ */
 
 export default function loadGame(emulator,chip8FontURL,superChipFontURL,romURL){
     let promises = [];
@@ -25,8 +35,22 @@ export default function loadGame(emulator,chip8FontURL,superChipFontURL,romURL){
         }());
     }
     promises.push(async function(){
-        emulator.rom = await downloadBinaryFile(romURL);
+        let response = await fetch(romURL);
+        let romHexString = await response.text();
+        emulator.rom = hexStringToBinary(romHexString);
+
     }());
     Promise.all(promises).then(()=>{emulator.startRom()});
     
+}
+
+function hexStringToBinary(hexString){
+    //hex strings are double the file size of original binary representation
+    let binary = new Uint8Array(Math.ceil(hexString.length/2));
+    for(let i = 0; i < binary.length; i++){
+        let stringStart = i*2;
+        let stringEnd = stringStart+2;
+        binary[i] = parseInt(hexString.slice(stringStart,stringEnd),16);
+    }
+    return binary
 }
