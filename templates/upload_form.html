@@ -51,7 +51,7 @@
             </ul>
             <button id='button_adder'>Add Button</button>
         </fieldset>
-        <button disabled>Submit</button>
+        <button >Submit</button>
     </form>
 {% endblock %}
 
@@ -95,10 +95,18 @@
     //set keycode from button press directly
     const keyCodeInputList = document.querySelector(".key_code_entry").parentNode;
     const keyCodeEndsWith = "key_code";
-    keyCodeInputList.addEventListener('keypress', event =>{
+    //prevent characters from displaying on the field during typing
+    keyCodeInputList.addEventListener('keydown',event=>{
         //name ends with key_code
         if(event.target.name.substr(-keyCodeEndsWith.length) == keyCodeEndsWith ){
-            event.target.value = event.keyCode;
+            event.preventDefault();
+        }
+    });
+
+    keyCodeInputList.addEventListener('keyup', event =>{
+        //name ends with key_code
+        if(event.target.name.substr(-keyCodeEndsWith.length) == keyCodeEndsWith ){
+            event.target.value = event.which;
         }
        
     });
