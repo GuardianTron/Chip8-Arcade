@@ -51,7 +51,7 @@
             </ul>
             <button id='button_adder'>Add Button</button>
         </fieldset>
-        <button>Submit</button>
+        <button disabled>Submit</button>
     </form>
 {% endblock %}
 
@@ -98,7 +98,6 @@
     keyCodeInputList.addEventListener('keypress', event =>{
         //name ends with key_code
         if(event.target.name.substr(-keyCodeEndsWith.length) == keyCodeEndsWith ){
-            event.preventDefault();
             event.target.value = event.keyCode;
         }
        
