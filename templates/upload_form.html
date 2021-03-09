@@ -38,7 +38,7 @@
            
             <ul>
                 {% for field in form.key_codes.entries %}
-                    <li>
+                    <li class='key_code_entry'>
                         {{ field.hex_value.label }} {{ field.hex_value }} 
                         {{ field.key_code.label }} {{ field.key_code }}
                         
@@ -49,7 +49,52 @@
                     </li>
                 {% endfor %}
             </ul>
+            <a id='button_adder'>Add Button</a>
         </fieldset>
         <button>Submit</button>
     </form>
+{% endblock %}
+
+{% block scripts_body %} 
+<script>
+    function newNameString(name,separator,newNumber){
+        let parts = name.split(separator);
+        //replace number in middle with new number
+        parts[1] = newNumber;
+        return parts.join(separator); 
+    }
+
+    function add_input_field(query){
+
+        const inputContainer = document.querySelector(query);
+        const newFields = inputContainer.cloneNode(true);
+        //determine how many fields exist
+        const newFieldNumber = inputContainer.parentNode.querySelectorAll(query).length;
+        console.log(newFields.children);
+        for(let i = 0; i < newFields.children.length; i++){
+            element = newFields.children[i];
+            if(element.hasAttribute('name')){
+                element.name = newNameString(element.name,'-',newFieldNumber);
+                //remove any user added data
+                element.value = '';
+            }
+            if(element.hasAttribute('id')){
+                element.id = newNameString(element.id,'-',newFieldNumber);
+            }
+            if(element.hasAttribute('for')){
+                console.log(element.attributes);
+                element.setAttribute('for',newNameString(element.getAttribute('for'),'-',newFieldNumber));
+            }
+        }
+        //add the new element to top
+        inputContainer.parentNode.insertBefore(newFields,inputContainer);
+        //return the new nodes for futher processing
+        return newFields;
+    }  
+    document.getElementById('button_adder').addEventListener('click',(event)=>{add_input_field('.key_code_entry'); });
+
+    
+
+</script>
+
 {% endblock %}
