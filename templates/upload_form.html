@@ -33,7 +33,7 @@ Upload Game
         <li>{{ renderfield(form.game_rom) }}</li>
     </ul>
     {{ render_errors(form.key_codes) }}
-    <fieldset>
+    <fieldset id='key_code_fields'>
         <legend>Configure Key Codes</legend>
 
         <ul>
@@ -49,7 +49,6 @@ Upload Game
             </li>
             {% endfor %}
         </ul>
-        <button id='button_adder'>Add Button</button>
     </fieldset>
     <button>Submit</button>
 </form>
@@ -123,8 +122,11 @@ Upload Game
         node.appendChild(clearButton);
     });
 
-
-    document.getElementById('button_adder').addEventListener('click', (event) => {
+    //add button to add more fields
+    const adderButton = document.createElement('button');
+    adderButton.appendChild(document.createTextNode('Add Entry'));
+    document.getElementById('key_code_fields').appendChild(adderButton);
+    adderButton.addEventListener('click', (event) => {
         //prevent form submttions
         event.preventDefault();
         add_input_field('.key_code_entry');
