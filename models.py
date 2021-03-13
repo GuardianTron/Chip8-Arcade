@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy,event
 from flask_security.models import fsqla_v2 as fsqla
 from sqlalchemy.orm import backref
 from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import datetime
 import os
 import uuid
 
@@ -98,6 +99,8 @@ class Game(db.Model,FileSaveMixin):
     title = db.Column(db.String(255),nullable=False)
     description = db.Column(db.Text)
     filename = db.Column(db.String(255),nullable=False)
+    created_on = db.Column(db.DateTime,default=datetime.now)
+    last_updated = db.Column(db.DateTime,onupdate=datetime.now)
     user = db.relationship('User',backref=db.backref('games',lazy='dynamic'))
 
     def save(self):
