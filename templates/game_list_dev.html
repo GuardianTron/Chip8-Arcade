@@ -16,7 +16,7 @@
     <tbody>
         {% for game in games %}
         <tr>
-            <td>{{ game.title }}</td>
+            <td><a href="{{ url_for('game_profile',id=game.id)}}">{{ game.title }}</a></td>
             <td>{{ game.description }}</td>
             <td><a href="{{ url_for('update_game',id=game.id) }}">Edit</a></td>
             <td><label for="game_ids">Delete</label><input type='checkbox' name='game_ids' value="{{ game.id }}"></td>
