@@ -11,6 +11,7 @@
 </head>
 <body>
     <nav>
+        <a href="{{ url_for('list_games') }}">Games</a>
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('list_games_developer') }}">My Games</a>
             <a href="{{ url_for('upload_new_game') }}">Add Game</a>
