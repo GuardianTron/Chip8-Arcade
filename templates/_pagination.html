@@ -1,0 +1,13 @@
+{% macro paginate(paginator,page) %}
+
+<nav class='pagination'>
+{% if paginator.has_prev %} 
+    <a href="{{ url_for(page,page=paginator.prev_num) }}"> &lt; Previous</a>
+{% endif %}
+
+{% if paginator.has_next %} 
+    <a href="{{ url_for(page,page=paginator.next_num) }}"> Next &gt; </a>
+{% endif %}
+
+</nav>
+{% endmacro %}

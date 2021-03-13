@@ -158,8 +158,10 @@ def game_profile(id):
 @app.route('/game/mygames')
 @roles_accepted('Game Developer')
 def list_games_developer():
-    games = current_user.games
-    return render_template('game_list_dev.html',games=games)
+    page = request.args.get('page',default=1,type=int)
+    posts_per_page = app.config['POSTS_PER_PAGE']
+    games = Game.query.filter(User.id == current_user.id).paginate(page,posts_per_page,False)
+    return render_template('game_list_dev.html',games=games.items,paginator=games)
 
 @app.route('/game/delete',methods=["POST"])
 @roles_accepted('Game Developer')
