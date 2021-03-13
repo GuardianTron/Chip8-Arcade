@@ -1,0 +1,23 @@
+{% extends 'base.html'%} 
+{% from '_pagination.html' import paginate %}
+{% block title %}Games{% endblock %}
+
+{% block main %}
+<table>
+    <thead>
+        <tr><td>Title:</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        {% for game in games %} 
+        <tr>
+            <td><a href="{{ url_for('game_profile',id=game.id) }}">{{ game.title }}</a></td>
+            <td>{{ game.description }}</td>
+        </tr>
+        {% endfor %}
+
+
+    </tbody>
+</table>
+{{ paginate(paginator,'list_games')}}
+
+{% endblock %}

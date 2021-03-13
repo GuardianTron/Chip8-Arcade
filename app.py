@@ -174,5 +174,12 @@ def delete_games():
     flash('Your games have been deleted.')
     return redirect(url_for('list_games_developer'))
 
+@app.route('/games')
+def list_games():
+    page = request.args.get('page',default=1,type=int)
+    posts_per_page = app.config['POSTS_PER_PAGE']
+    games = Game.query.order_by(Game.created_on.desc()).paginate(page,posts_per_page,False)
+    return render_template('game_list.html',games=games.items,paginator=games)
+
 if __name__ == "__main__":
     app.run(debug=True)
