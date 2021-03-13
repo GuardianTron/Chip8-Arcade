@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileRequired
-from wtforms import StringField,TextAreaField,IntegerField,FieldList,FormField
+from wtforms import StringField,TextAreaField,IntegerField,FieldList,FormField,SelectField
 from wtforms.fields.core import Field
 from wtforms.validators import InputRequired, NumberRange, Regexp, ValidationError,Length,Optional
 from werkzeug.datastructures import FileStorage
@@ -89,8 +89,13 @@ def strip_whitespace(text):
         return text.strip()
     return text
 
+
+
 class KeyConfigForm(FlaskForm):
-    hex_value = StringField('Hex Value',validators=[Optional(),Regexp("^(0x)?[0-9a-f]$",re.IGNORECASE,message="Must be a hexidecimal value between 0 and F")])
+    #generate hexidecimal select choices.  Have blank option as default
+    hex_choices = [(hex(i)[2],hex(i)) for i in range(0,16)]
+    hex_choices.insert(0,('',''))
+    hex_value = SelectField('Hex Value',validators=[Optional()],choices=hex_choices)
     key_code = IntegerField('Key Code',validators=[Optional(),NumberRange(0,255,message="Please enter a valid keycode.")])       
 
 class GameUploadForm(FlaskForm):
