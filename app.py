@@ -53,7 +53,8 @@ def upload_new_game():
             rom_binary = form.game_rom.data.stream.read()
             title = form.title.data
             description = form.description.data
-            game_entry = Game(title=title,description=description,file=rom_binary,user=current_user)
+            instructions = form.instructions.data
+            game_entry = Game(title=title,description=description,instructions=instructions,file=rom_binary,user=current_user)
             game_entry.control_config.append(ControlConfig(key_mapping=form.key_configuration))
             db.session.add(game_entry)
             db.session.commit()
@@ -93,6 +94,7 @@ def update_game(id):
                     rom_binary = form.game_rom.data.stream.read()
                 game.title = form.title.data
                 game.description = form.description.data
+                game.instructions = form.instructions.data
                 game.file = rom_binary
 
                 #update control configuration

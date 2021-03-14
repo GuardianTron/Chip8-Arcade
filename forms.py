@@ -104,6 +104,7 @@ class GameUploadForm(FlaskForm):
                         validators=[InputRequired(),Length(min=1,max=255),Regexp("^[0-9a-zA-z \.\?\!\,\']+$",message='Only letters, numbers, spaces and the following punctuation are allowed: !?.\',')],
                         filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
+    instructions = TextAreaField('Instructions',validators=[InputRequired(),Length(min=1,max=5000)])
     key_codes = FieldList(FormField(KeyConfigForm),validators=[ConfigKeysUnique()],min_entries=1,max_entries=16)
 
     
