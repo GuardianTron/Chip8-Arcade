@@ -1,22 +1,13 @@
 window.addEventListener('load', event => {
-    //set keycode from button press directly
-    const keyCodeInputList = document.querySelector(".key_code_entry").parentNode;
-    const keyCodeEndsWith = "key_code";
-    //prevent characters from displaying on the field during typing
-    keyCodeInputList.addEventListener('keydown', event => {
-        //name ends with key_code
-        if (event.target.name.substr(-keyCodeEndsWith.length) == keyCodeEndsWith) {
-            event.preventDefault();
-        }
+    const keyComplete = new KeyCodeCompletion('key_code_entry', 'key_code');
+    const enableCompletionCheckbox = document.getElementById('key_code_autocomplete');
+    enableCompletionCheckbox.addEventListener('change',event =>{
+        if (event.target.checked) keyComplete.enableCompletion();
+        else keyComplete.disableCompletion();
     });
+    //enable by default
+    keyComplete.enableCompletion();
 
-    keyCodeInputList.addEventListener('keyup', event => {
-        //name ends with key_code
-        if (event.target.name.substr(-keyCodeEndsWith.length) == keyCodeEndsWith) {
-            event.target.value = event.which;
-        }
-
-    });
 
     //add clear buttons
     document.querySelectorAll('.key_code_entry').forEach(node => {
@@ -75,6 +66,54 @@ function add_input_field(query) {
 }
 
 
+
+
+
 /**@TODO Consider adding checkbox to allow disabling of javascript keycode entry */
 
+class KeyCodeCompletion {
+    constructor(configLineClassName, inputFieldNameEndsWith) {
 
+        const firstLine = document.getElementsByClassName(configLineClassName).item(0);
+        if (!firstLine || !firstLine.parentNode) throw new Error(`Unable to locate code configuration elements with class ${configLineClassName}`);
+        this.formContainer = firstLine.parentNode;
+        this.inputFieldNameEndsWith = inputFieldNameEndsWith;
+    }
+
+    enableCompletion() {
+        this.formContainer.addEventListener('keydown', this.handleKeyDown);
+        this.formContainer.addEventListener('keyup', this.handleKeyUp);
+    }
+
+    disableCompletion() {
+        this.formContainer.removeEventListener('keydown', this.handleKeyDown);
+        this.formContainer.removeEventListener('keyup', this.handleKeyUp);
+    }
+
+
+    /**
+     * Suppress regular output for keydown events
+     */
+    handleKeyDown = event => {
+        if (event.target.name.substr(-this.inputFieldNameEndsWith.length) == this.inputFieldNameEndsWith) {
+            event.preventDefault();
+        }
+    }
+
+    /**
+     * Fill input with javascript keycode based on key pressed
+     * @param  event 
+     */
+    handleKeyUp = event => {
+        if (event.target.name.substr(-this.inputFieldNameEndsWith.length) == this.inputFieldNameEndsWith) {
+            event.target.value = event.which;
+        }
+    }
+
+
+
+
+
+
+
+}
