@@ -3,10 +3,18 @@
 {% block title %}Game: {{ game.title }}{% endblock %}
 
 {% block main %}
+<section>
 <h1>{{ game.title}}</h1>
 <p>
     {{ game.description }}
 </p>
+</section>
+<section>
+    <h1>Instructions:</h1>
+    <p>
+        {{ game.instructions }}
+    </p>
+</section>
 <p><a href="{{ url_for('play_game',id=game.id) }}">Play {{ game.title }}</a></p>
 
 <p>{{ current_user.name }}</p>
