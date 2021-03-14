@@ -75,6 +75,6 @@ function add_input_field(query) {
 }
 
 
-
+/**@TODO Consider adding checkbox to allow disabling of javascript keycode entry */
 
 
