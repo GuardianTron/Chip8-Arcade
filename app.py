@@ -1,4 +1,5 @@
 from flask import Flask,render_template,request, redirect, flash,url_for,json,abort,send_file
+from flask import Markup,escape
 from flask_security.decorators import roles_accepted,roles_required
 from flask_security.utils import hash_password,current_user
 from models import db,User,Role,Game,ControlConfig
@@ -182,6 +183,13 @@ def list_games():
     posts_per_page = app.config['POSTS_PER_PAGE']
     games = Game.query.order_by(Game.created_on.desc()).paginate(page,posts_per_page,False)
     return render_template('game_list.html',games=games.items,paginator=games)
+
+@app.template_filter('newline_to_p')
+def newLineToParagragh(string):
+    lines_raw = string.splitlines()
+    lines_sanitized = [Markup.escape(line) for line in lines_raw]
+    return Markup(f"<p>{'</p><p>'.join(lines_sanitized)}</p>")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

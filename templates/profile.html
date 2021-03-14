@@ -5,15 +5,12 @@
 {% block main %}
 <section>
 <h1>{{ game.title}}</h1>
-<p>
-    {{ game.description }}
-</p>
+
+    {{ game.description | newline_to_p }}
 </section>
 <section>
     <h1>Instructions:</h1>
-    <p>
-        {{ game.instructions }}
-    </p>
+        {{ game.instructions | newline_to_p }}
 </section>
 <p><a href="{{ url_for('play_game',id=game.id) }}">Play {{ game.title }}</a></p>
 
