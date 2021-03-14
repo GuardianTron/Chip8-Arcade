@@ -98,6 +98,7 @@ class Game(db.Model,FileSaveMixin):
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
     title = db.Column(db.String(255),nullable=False)
     description = db.Column(db.Text)
+    instructions = db.Column(db.Text)
     filename = db.Column(db.String(255),nullable=False)
     created_on = db.Column(db.DateTime,default=datetime.now)
     last_updated = db.Column(db.DateTime,onupdate=datetime.now)
