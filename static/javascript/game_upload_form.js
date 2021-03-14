@@ -69,9 +69,18 @@ function add_input_field(query) {
 
 
 
-/**@TODO Consider adding checkbox to allow disabling of javascript keycode entry */
+/**
+ * Class to handle autocomplete feature for keycodes.
+ * Had event handlers for keycode completion as well
+ * as methods to enable and disable keycode completion.
+ */
 
 class KeyCodeCompletion {
+    /**
+     * 
+     * @param {String} configLineClassName -- Class name of elements containing fields for single key code configuration
+     * @param {String} inputFieldNameEndsWith -- The end portion of the individual key code field name.  Used in conjunction with Flask-WTF FieldList 
+     */
     constructor(configLineClassName, inputFieldNameEndsWith) {
 
         const firstLine = document.getElementsByClassName(configLineClassName).item(0);
