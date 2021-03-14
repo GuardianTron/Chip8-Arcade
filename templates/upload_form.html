@@ -36,7 +36,10 @@ Upload Game
     {{ render_errors(form.key_codes) }}
     <fieldset id='key_code_fields'>
         <legend>Configure Key Codes</legend>
-
+        <p>
+            <label for="key_code_autocomplete">Get key code from keypress:</label>
+            <input type="checkbox" name="key_code_autocomplete" id="key_code_autocomplete" checked>
+            </p>
         <ul>
             {% for field in form.key_codes.entries %}
             <li class='key_code_entry'>
