@@ -1,15 +1,27 @@
 window.addEventListener('load', event => {
+    //set up key code detection and clear buttons
     const keyComplete = new KeyCodeCompletion('key_code_entry', 'key_code');
+    const clearButtons = new ClearButtonManager('key_code_entry','[name$=key_code]');
     const enableCompletionCheckbox = document.getElementById('key_code_autocomplete');
     enableCompletionCheckbox.addEventListener('change',event =>{
-        if (event.target.checked) keyComplete.enableCompletion();
-        else keyComplete.disableCompletion();
+        if (event.target.checked){
+             keyComplete.enableCompletion();
+             clearButtons.addClearButtons();
+        }
+        else{
+            clearButtons.removeClearButtons();
+            keyComplete.disableCompletion();
+        }
     });
+
     //enable by default
     keyComplete.enableCompletion();
+    clearButtons.addClearButtons();
 
+    //set up clear buttons for 
 
     //add clear buttons
+    /*
     document.querySelectorAll('.key_code_entry').forEach(node => {
         const clearButton = document.createElement('button', { class: 'clear_button' });
         clearButton.appendChild(document.createTextNode('Clear'));
@@ -20,6 +32,7 @@ window.addEventListener('load', event => {
         });
         node.appendChild(clearButton);
     });
+    */
 
     //add button to add more fields
     const adderButton = document.createElement('button');
@@ -119,10 +132,64 @@ class KeyCodeCompletion {
         }
     }
 
+}
 
+class ClearButtonManager{
+    /**
+     * 
+     * @param {String} parentNodeClass Class name of the field's container
+     * @param {String} inputFieldQuery CSS Query for the input field to be cleared
+     * @param {Object} Options buttonElementType - Type of element to be created, buttonClass - CSS class for button, label - the label string
+     */
+    constructor(parentNodeClass,inputFieldQuery,{buttonElementType='button',buttonClass = 'clear_button',label='clear'} = {}){
+        this.parentNodeClass = parentNodeClass;
+        this.inputFieldQuery = inputFieldQuery;
+        this.buttonElementType = buttonElementType;
+        this.buttonClass = buttonClass;
+        this.label = label;
+    }
 
+    addClearButtons(){
+        const parentNodes = this._getParentNodes();
+        parentNodes.forEach( node =>{
+            const clearButton = document.createElement(this.buttonElementType);
+            clearButton.className = this.buttonClass;
+            clearButton.appendChild(document.createTextNode(this.label));
+            clearButton.addEventListener('click',this.handleClear);
+            node.appendChild(clearButton);
+        });
+    }
 
+    removeClearButtons(){
+        const parentNodes = this._getParentNodes();
+        parentNodes.forEach( node =>{
+            /*
+             * Buttons are removed from the container nodes instead of 
+             * simply using document.getElementsByClassName to prevent other 
+             * buttons from being removed from unrelated containers should they 
+             * share the other class name.
+             */
+            const clearButton = node.getElementsByClassName(this.buttonClass)[0];
+            if(clearButton){
+                node.removeChild(clearButton);
+            }
+        
 
+        
+        });
+    }
 
+    handleClear = event =>{
+        event.preventDefault()
+        try{
+            document.querySelector(this.inputFieldQuery).value = ''
+        }
+        catch(error){
+            throw new Error(`Field matching query ${this.inputFieldQuery} not found by clear function.`);
+        }
+    }
 
+    _getParentNodes(){
+        return document.querySelectorAll(`.${this.parentNodeClass}`);
+    }
 }
