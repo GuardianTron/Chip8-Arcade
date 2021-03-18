@@ -147,8 +147,10 @@ def send_rom(id):
     game = Game.query.get(id)
     if game is None:
         abort(404)
-    return send_file(game.path)
-
+    try:
+        return send_file(game.path)
+    except:
+        abort(404)
 @app.route('/game/<int:id>')
 def game_profile(id):
     game = Game.query.get(id)
