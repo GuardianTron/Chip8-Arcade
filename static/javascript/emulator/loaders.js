@@ -5,9 +5,11 @@ async function downloadBinaryFile(fileURL){
 
     if(response.ok){
         const fileBuffer = await response.arrayBuffer();
+        console.log(response.status);
         return new Uint8Array(fileBuffer);
     }
     else{
+  
         throw new Error(`Unable to load file ${fileURL}.`);
     }
 }
@@ -20,6 +22,7 @@ async function downloadBinaryFile(fileURL){
  * @param {String} chip8FontURL 
  * @param {String} superChipFontURL 
  * @param {String} romURL 
+ * @return {Promise}
  */
 
 export default function loadGame(emulator,chip8FontURL,superChipFontURL,romURL){
@@ -31,16 +34,18 @@ export default function loadGame(emulator,chip8FontURL,superChipFontURL,romURL){
     }
     if(!emulator.superFont){
         promises.push(async function(){
-            emulator.superChipFont = await downloadBinaryFile(superChipFontURL);
-        }());
+            emulator.superChipFont = await downloadBinaryFile(superChipFontURL);        }());
     }
     promises.push(async function(){
         let response = await fetch(romURL);
+        if(!response.ok){
+            throw new Error(`Unable to download rom ${romURL}`);
+        }
         let romHexString = await response.text();
         emulator.rom = hexStringToBinary(romHexString);
 
     }());
-    Promise.all(promises).then(()=>{emulator.startRom()});
+    return Promise.all(promises).then(()=>{emulator.startRom()});
     
 }
 

@@ -7,9 +7,13 @@ const emulator = new Chip8Emulator(canvas);
 const gameUrl = document.querySelector("script[data-gameurl]").dataset.gameurl;
 fetch(gameUrl).then(
     async function(response){
-    const config = await response.json();
-    const keys = config['key_config'];
-    emulator.loadKeyMap(keys);
-    loadGame(emulator,config['chip8_font'],config['super_chip_font'],config['rom']);
-            
-});
+    if(response.ok){
+        const config = await response.json();
+        const keys = config['key_config'];
+        emulator.loadKeyMap(keys);
+        return loadGame(emulator,config['chip8_font'],config['super_chip_font'],config['rom']);
+    }
+    else{
+        throw new Error(`Unable to download configuration. Response Code: ${response.status}`)
+    }
+}).catch(error => alert(error));
