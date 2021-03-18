@@ -171,13 +171,17 @@ def list_games_developer():
 @app.route('/game/delete',methods=["POST"])
 @roles_accepted('Game Developer')
 def delete_games():
-    ids = request.form.getlist('game_ids')
-    games = Game.query.filter(Game.id.in_(ids),User.id==current_user.id).all()
-    for game in games:
-        db.session.delete(game)
-    db.session.commit()
-    flash('Your games have been deleted.')
-    return redirect(url_for('list_games_developer'))
+    try:
+        ids = request.form.getlist('game_ids')
+        games = Game.query.filter(Game.id.in_(ids),User.id==current_user.id).all()
+        for game in games:
+            db.session.delete(game)
+        db.session.commit()
+        flash('Your games have been deleted.')
+    except SQLAlchemyError:
+        flash('The games could not be deleted from the database.')
+    finally:
+        return redirect(url_for('list_games_developer'))
 
 @app.route('/games')
 def list_games():
