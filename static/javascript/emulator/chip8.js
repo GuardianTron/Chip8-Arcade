@@ -44,20 +44,20 @@ export default class Chip8{
 
     loadRom(rom){
         if(!(rom instanceof Uint8Array)){
-            throw new Error("Roms must be an Uint8Array");
+            throw new TypeError("Roms must be an Uint8Array");
         }
 
         
         this.ram = new Uint8Array(4096);
         //copy 8 bit fonts into ram at start
         if(!(this.chip8Font instanceof Uint8Array)){
-            throw new Error("Chip 8 font is must an instance of Uint8Array");
+            throw new TypeError("Chip 8 font is must an instance of Uint8Array");
         }
         this.ram.set(this.chip8Font.slice(0,CHIP_8_FONT_SIZE));
         
         //copy 16 bit super chip font into ram
         if(! (this.superChipFont instanceof Uint8Array)){
-            throw new Error("Super chip font must be an instance of Uint8Array");
+            throw new TypeError("Super chip font must be an instance of Uint8Array");
         }
 
         this.ram.set(this.superChipFont.slice(0,SUPER_CHIP_FONT_SIZE),CHIP_8_FONT_SIZE);
