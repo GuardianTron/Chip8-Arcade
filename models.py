@@ -113,6 +113,7 @@ class Game(db.Model,FileSaveMixin):
 class ControlConfig(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     game_id = db.Column(db.Integer,db.ForeignKey('game.id'))
+    emulator_speed = db.Column(db.Integer,default=1000)
     key_mapping = db.Column(db.PickleType())
     game = db.relationship('Game',uselist=False,backref=db.backref('control_config',lazy='dynamic'))
 
