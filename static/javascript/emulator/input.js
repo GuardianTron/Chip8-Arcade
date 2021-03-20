@@ -1,5 +1,9 @@
 import { Chip8 } from "./chip8.js";
+/**
+ * @todo Add error handling for case where chip8key is not 0x0 - 0xF
+ */
 export class KeyboardInput{
+
     
     constructor(chip8){
         this.chip8 = chip8;
@@ -33,6 +37,47 @@ export class KeyboardInput{
             this.chip8.unsetKey(chip8Key);
         }
         
+    }
+
+
+}
+
+export class TouchInput{
+
+    constructor(chip8){
+        this.chip8 = chip8;
+        this.controlElementToChip8 = Map();
+        this.chip8ToControElement = Map();
+    }
+
+    mapTouchControl(controlElement,chip8Key){
+        if(this.chip8ToControElement.has(chip8Key)){
+            const oldControlElement = this.chip8ToControElement.get(chip8Key);
+            oldControlElement.removeEventListener('touchstart',this.ontouchstart);
+            oldControlElement.removeEventListener('touchend',this.ontouchend);
+            this.controlElementToChip8.delete(oldControlElement);
+        }
+        this.chip8ToControlElement.set(chip8Key,controlElement);
+        this.controlElementToChip8.set(controlElement,chip8Key);
+        controlElement.addEventListener('touchstart',this.ontouchstart);
+        controlElement.addEventListener('touchend',this.ontouchend);
+
+    }
+
+    ontouchstart = event =>{
+        if(this.controlElementToChip8.has(event.target)){
+            event.preventDefault();
+            let chip8Key = this.controlElementToChip8.get(event.target);
+            this.cpu.setKey(chip8Key);
+        }
+    }
+
+    ontouchend = event =>{
+        if(this.controlElementToChip8.has(event.target)){
+            event.preventDefault();
+            let chip8Key = this.controlElementToChip8.get(event.target);
+            this.cpu.unsetKey(chip8Key);
+        }
     }
 
 
