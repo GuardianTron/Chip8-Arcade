@@ -55,8 +55,9 @@ def upload_new_game():
             title = form.title.data
             description = form.description.data
             instructions = form.instructions.data
+            emulator_speed = form.emulator_speed.data
             game_entry = Game(title=title,description=description,instructions=instructions,file=rom_binary,user=current_user)
-            game_entry.control_config.append(ControlConfig(key_mapping=form.key_configuration))
+            game_entry.control_config.append(ControlConfig(key_mapping=form.key_configuration,emulator_speed=emulator_speed))
             db.session.add(game_entry)
             db.session.commit()
         except IOError:
@@ -103,8 +104,9 @@ def update_game(id):
                 config = game.control_config.first()
                 if config :
                     config.key_mapping = form.key_configuration
+                    config.emulator_speed = form.emulator_speed.data
                 else:
-                    game.control_config.append(ControlConfig(key_mapping=form.key_configuration))
+                    game.control_config.append(ControlConfig(key_mapping=form.key_configuration,emulator_speed=form.emulator_speed.data))
                 
                 db.session.commit()
             except IOError:
@@ -137,6 +139,7 @@ def game_json(id):
     game_info['rom'] = url_for('send_rom',id=id)
     game_info['chip8_font'] = url_for('static',filename="javascript/emulator/fonts/chip8.cft")
     game_info['super_chip_font'] = url_for('static',filename="javascript/emulator/fonts/chip8super.sft")
+    game_info['emulator_speed'] = control_config.emulator_speed
     #reverse keymapping to fit with emulator standard of hex_value:key
     keys_remapped = {control_config.key_mapping[key_code]:key_code for key_code in control_config.key_mapping}
     game_info['key_config'] = keys_remapped

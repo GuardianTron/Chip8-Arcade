@@ -9,11 +9,14 @@ fetch(gameUrl).then(
     async function(response){
     if(response.ok){
         const config = await response.json();
-        if(config.hasOwnProperty('error')){
-            throw new Error('Game could not be found on the server.');
-        }
+        if(config.hasOwnProperty('error')) throw new Error('Game could not be found on the server.');        
+        else if(!config.hasOwnProperty('key_config')) throw new Error('Keyboard configuration not detected.');
+        else if(!config.hasOwnProperty('emulator_speed')) throw new Error('Emulation clock speed not configured.');
+        
         const keys = config['key_config'];
+        const clockSpeed = config['emulator_speed']
         emulator.loadKeyMap(keys);
+        emulator.clockSpeed = clockSpeed;
         return loadGame(emulator,config['chip8_font'],config['super_chip_font'],config['rom']);
     }
     else{

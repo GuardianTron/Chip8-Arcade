@@ -93,6 +93,7 @@ export default class Chip8{
 
     /** Speed in hz */
     set clockSpeed(speed){
+        if(isNaN(speed)) throw new TypeError('Clock speed must be a number');
         this._clockSpeed = speed;
     }
 

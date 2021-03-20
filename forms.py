@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileRequired
 from wtforms import StringField,TextAreaField,IntegerField,FieldList,FormField,SelectField
+from wtforms.widgets.html5 import NumberInput
 from wtforms.fields.core import Field
 from wtforms.validators import InputRequired, NumberRange, Regexp, ValidationError,Length,Optional
 from werkzeug.datastructures import FileStorage
@@ -105,6 +106,7 @@ class GameUploadForm(FlaskForm):
                         filters=[strip_whitespace])
     description = TextAreaField('Description',validators=[InputRequired(),Length(min=1,max=5000)])
     instructions = TextAreaField('Instructions',validators=[InputRequired(),Length(min=1,max=5000)])
+    emulator_speed = IntegerField('Emulator Speed',validators=[NumberRange(1000,16000,message='Please select a speed within the range of 1,000 to 16,000 hz.')],widget=NumberInput(min=1000,max=16000,step=10))
     key_codes = FieldList(FormField(KeyConfigForm),validators=[ConfigKeysUnique()],min_entries=1,max_entries=16)
 
     

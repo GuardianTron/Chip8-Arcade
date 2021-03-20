@@ -26,24 +26,6 @@ export class Chip8Emulator{
         
         window.addEventListener("keyup",this.keyboardMapper.onkeyup);
         
-        /* leaving example code for testing
-        this.keyboardMapper.mapKey(144,1);
-        this.keyboardMapper.mapKey(111,2);
-        this.keyboardMapper.mapKey(106,3);
-        this.keyboardMapper.mapKey(103,4);
-        this.keyboardMapper.mapKey(104,5);
-        this.keyboardMapper.mapKey(105,6);
-        this.keyboardMapper.mapKey(100,7);
-        this.keyboardMapper.mapKey(101,8);
-        this.keyboardMapper.mapKey(102,9);
-        this.keyboardMapper.mapKey(98,0);
-        this.keyboardMapper.mapKey(97,0xA);
-        this.keyboardMapper.mapKey(99,0xB);
-        this.keyboardMapper.mapKey(109,0xC);
-        this.keyboardMapper.mapKey(107,0xD);
-        this.keyboardMapper.mapKey(13,0xE);
-        this.keyboardMapper.mapKey(110,0xF);
-        */
         this.cpu.clockSpeed = 1000;
         
         this.cpu.sound = this.beep;
@@ -54,6 +36,15 @@ export class Chip8Emulator{
 
 
     }
+
+    get clockSpeed(){
+        return this.cpu.clockSpeed;
+    }
+
+    set clockSpeed(speed){
+        this.cpu.clockSpeed = speed;
+    }
+
     get chip8Font(){
         return this.cpu.chip8Font;
     }
