@@ -18,22 +18,6 @@ window.addEventListener('load', event => {
     keyComplete.enableCompletion();
     clearButtons.addClearButtons();
 
-    //set up clear buttons for 
-
-    //add clear buttons
-    /*
-    document.querySelectorAll('.key_code_entry').forEach(node => {
-        const clearButton = document.createElement('button', { class: 'clear_button' });
-        clearButton.appendChild(document.createTextNode('Clear'));
-        clearButton.addEventListener('click', event => {
-            event.preventDefault();
-            const keyCodeInput = node.querySelector('[name$=key_code]');
-            keyCodeInput.value = '';
-        });
-        node.appendChild(clearButton);
-    });
-    */
-
     //add button to add more fields
     const adderButton = document.createElement('button');
     adderButton.appendChild(document.createTextNode('Add Entry'));
